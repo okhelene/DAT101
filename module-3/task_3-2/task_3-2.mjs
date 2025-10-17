@@ -13,7 +13,15 @@ printOut(newLine);
 
 printOut("--- Part 3 ----------------------------------------------------------------------------------------------");
 /* Put your code below here!*/
-printOut("Replace this with you answer!");
+//Random, 0.0 til 0.9999
+const rnd = Math.random();
+printOut("random: " + rnd);
+
+rnd = rnd * 10;
+printOut("random: " + rnd);
+
+rnd = Math.floor(rnd);
+printOut("random: " + rnd);
 printOut(newLine);
 
 printOut("--- Part 4 ----------------------------------------------------------------------------------------------");
