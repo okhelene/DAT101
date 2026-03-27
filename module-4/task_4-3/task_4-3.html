@@ -97,8 +97,23 @@
   </div>
 </fieldset>
 <ol>
-  <li>[Write the question here, and copy this for more questions]</li>
-  <p>[Write your answer here, and copy this for more answers]</p>
+  <li>[In this assignment, we use the DOM. Explain how this library can help us develop interactive web
+  pages.]</li>
+  <p>[DOM = document object model. its a programing interface built into browsers that represent your HTML page as a tree of objects. every element (like headings and buttons) becomes a node in that tree that javascript can reach through document.
+    this makes it possible to interact by reading (get current value of an input), modify it (change text, hide element, add new element) and react to the user (respond to clicks, key presses, form submission). Without DOM you would only be able to deliver a static page]</p>
+  <li>[What is an event? simply explain what happens when we add an event listener to an object]</li>
+  <p>[an event is a signal that soething happened, the user clicked a button, pressed a key, moved the mouse, or the browser finished loading resource. the browser fires these signals continously as the user interacts with the page
+    when you call "element.addEventListener("click", myFunction), you are telling the browser: "whenever this element recieves a click, call "myFunction"". the browser keeps an internal list of these subscriptions. when the event fires, it works through that
+    list and calls each registered function in order. nothing runs until the event actually happens, so the rest of your code is not blocked.]</p>
+  <li>[sometimes we need to use an event object to get data from the event. explain how this event object is structured, 
+    dont explain all functions or attributes. try to explain, for example, how to retrieve data from a keyboard or mouse]</li>
+  <p>[every time an event fires, the browser automatically creates an event object and passes it as the first argument to your handler. this object always has a common base (the type of event, the element that triggered it etc) and then it is extended with extra properties depending on what kind of event it is
+    this you see in controllog 
+    eks: getting data from keyboard event: the event object will be "KeyboardEvent". the most useful properties are "event.key"(the human readable name of the key,e.g."Enter", "a") and "event.code"(the physical key position,e.g"KeyA"). Modifier state is available via "event.shiftKey", "event.ctrlKey" etc]</p>
+  <li>[Explain the main difference between DOM ids and DOM name. can we have identical IDs?]</li>
+  <p>[key difference is scope and purpose. id is for identifying a single element on the page and can not have the same id as another element. groups of the same element, like a group of radio buttons can share name though. docuument.getElementById() will return match used for direct selection and CSS styling of specific element.
+    having same name makes the browser know they belong together. when they are submitted, the name, not the id is sent to the server as the field key
+    html: <input type="radio" id="opt1" name="color" value="red">]</p>
 </ol>
 <script type="module" src="./task_4-3.mjs" defer></script>
 </body>
