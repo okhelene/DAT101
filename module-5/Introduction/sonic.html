@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" href="favicon.ico" type="image/x-icon" />
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
+    <title>Sonic Example</title>
+    <style>
+      .prevent-select {
+        -webkit-user-select: none; /* Safari */
+        -ms-user-select: none; /* IE 10 and IE 11 */
+        user-select: none; /* Standard syntax */
+      }
+    </style>
+    <!-- Import map: map the bare specifier "three" to the local module build. -->
+    <script type="importmap">
+      {
+        "imports": {
+          "libSprite": "../../common/script/libSprite.mjs",
+          "lib2d": "../../common/script/lib2d.mjs"
+        }
+      }
+    </script>
+  </head>
+  <body class="prevent-select">
+    <canvas id="cvs" style="background-color: antiquewhite" width="1024" height="512"></canvas>
+  </body>
+  <script type="module" defer>
+    //import libraries
+    import { TSpriteCanvas, TSprite } from "libSprite";
+
+      // prettier-ignore
+  const SpriteInfoList = {
+    sonic1: { x: 0, y:   0, width: 102, height: 125, count: 6},
+    sonic2: { x: 0, y: 125, width: 102, height: 125, count: 9},
+    sonic3: { x: 0, y: 250, width: 102, height: 125, count: 9},
+    sonic4: { x: 0, y: 375, width: 102, height:  75, count: 7},
+    sonic5: { x: 0, y: 450, width: 100, height: 130, count: 5},
+    sonic6: { x: 0, y: 575, width: 102, height: 125, count: 3},
+    sonic7: { x: 0, y: 700, width: 102, height: 125, count: 2},
+    sonic8: { x: 0, y: 825, width: 102, height: 125, count: 2},
+    sonic9: { x: 0, y: 950, width: 102, height: 125, count: 4}
+  }
+
+    const cvs = document.getElementById("cvs");
+    const ctx = cvs.getContext("2d");
+    const spcvs = new TSpriteCanvas(cvs);
+    const hero1 = new TSprite(spcvs, SpriteInfoList.sonic2, 0, 100);
+    const hero2 = new TSprite(spcvs, SpriteInfoList.sonic3, 0, 225);
+    const hero3 = new TSprite(spcvs, SpriteInfoList.sonic5, 100, 350);
+
+    //Functions
+    function drawCanvas(){
+      //this is a high performance function
+      //Do not do any heavy calculations here
+
+      hero1.draw();
+      hero2.draw();
+      hero3.draw();
+    }
+    let dir = 1; // 1 = right, -1 = left
+    let dir2 = 1; 
+    let dir3 = 1;
+
+    function animate (){
+      hero1.x += 10 * dir;
+      if((hero1.x > cvs.width - hero1.width) || (hero1.x < -hero1.width && dir < 0)){ //får helten til å fortsette andre rettningen, istede for å gå av canvaset
+        hero1.flipHorizontal();
+        dir *= -1; //flippe mellom 1 og - 1, bare gang på -1
+      }
+      hero2.x += 10 * dir2;
+      if((hero2.x > cvs.width - hero2.width) || (hero2.x < -hero2.width && dir2 < 0)){
+        hero2.flipHorizontal();
+        dir2 *= -1;
+        hero1.hidden = false;
+      }
+    }
+
+    function sheetLoaded(){
+      console.log("Sheet loaded");
+      spcvs.showFramerate = true;
+      spcvs.onDraw = drawCanvas;
+      hero1.animationSpeed = 30;
+      hero1.rotation = 0;
+      hero1.hidden = true; //for å gjemme den
+      hero2.animationSpeed = 30;
+      hero2.rotation = 0;
+      hero3.animationSpeed = 30;
+      hero3.rotation = 0;
+
+      function onKeyDown(aEvent) {
+        switch(aEvent.code){
+          case "ArrowUp":
+            hero3.y -= 5;
+            break;
+          case "ArrowRight":
+            hero3.y += 5;
+            break;
+          case "ArrowLeft":
+            hero3.x -= 5;
+            break;
+          case "ArrowDown":
+            hero3.x += 5;
+            break;
+        }
+      }
+ 
+      //hero.flipHorizontal(); funksjon som får han til å snu og løpe andre veien
+
+      //start animation
+      setInterval(animate, 20);
+    }
+    // main application
+    spcvs.loadSpriteImage("sonic_sprite_sheet.png", sheetLoaded);
+    document.addEventListener("keydown", onKeyDown);
+  </script>
+</html>

@@ -13,7 +13,7 @@ function Part1PrintDate(){
     printOut(norwegianDate);
 }
 Part1PrintDate();
-printOut(newLine);
+printOut(newLine)
 
 printOut("--- Part 2 ----------------------------------------------------------------------------------------------");
 //Take your "Today's Date" function from Task 1 and supercharge it! Not only should it display today's date in elegant Norwegian fashion, it also needs to return that date as a powerful date object, ready for further manipulation.

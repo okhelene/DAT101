@@ -1,4 +1,5 @@
 "use strict";
+
 import { TSprite, TSpriteButton, TSpriteNumber } from "libSprite";
 import { startGame, EGameStatus, hero, obstacles, baits } from "./FlappyBird.mjs";
 import { TSoundFile } from "libSound";
@@ -6,10 +7,8 @@ import { chkMuteSound } from "./FlappyBird.mjs";
 
 const fnCountDown = "./Media/countDown.mp3";
 const fnRunning = "./Media/running.mp3";
-//const fnGameOver = "./Media/gameOver.mp3"; ikke denne? hvorfor spilles ikke game over sound? 
 
 export class TMenu {
-  //TMenu er konstruktør
   #spTitle;
   #spReady;
   #spPlayBtn;
@@ -30,7 +29,7 @@ export class TMenu {
     this.#spPlayBtn = new TSpriteButton(aSpcvs, aSPI.buttonPlay, 240, 180);
     this.#spPlayBtn.addEventListener("click", this.spPlayBtnClick.bind(this));
     this.#spCountDown = new TSpriteNumber(aSpcvs, aSPI.numberBig, 280, 190);
-    this.#spCountDown.hidden = true;
+    this.#spCountDown.visible = false;
     this.#sfCountDown = null;
     this.#sfRunning = null;
     this.#spGameScore = new TSpriteNumber(aSpcvs, aSPI.numberSmall, 10, 10);
@@ -56,9 +55,10 @@ export class TMenu {
       this.#sfRunning.stop();
     }
   }
+
   draw(state) {
     switch (state) {
-      case 0: //idle
+      case 0: // idle
         this.#spTitle.draw();
         this.#spPlayBtn.draw();
         break;
@@ -113,7 +113,7 @@ export class TMenu {
     if (this.#spCountDown.value > 0) {
       setTimeout(this.countDown.bind(this), 1000);
     } else {
-      this.#spCountDown.hidden = true;
+      this.#spCountDown.visible = false;
       this.#spReady.visible = false;
       this.#spTitle.hidden = true;
 
@@ -124,30 +124,32 @@ export class TMenu {
       startGame();
     }
   }
+
   spPlayBtnClick() {
-    console.log("Click!"); //reset everything if game over
+    console.log("Click");
     if (EGameStatus.state === EGameStatus.gameOver) {
-      //reset hero
+      // Reset Hero
       hero.restart();
-      //clear arrays and reset score
-      obstacles.length = 0;
-      baits.length = 0;
+
+      obstacles.length = 0; // Clear all obstacles
+      baits.length = 0; // Clear all baits
+
       this.resetScore();
-      //hide game over elements
+
       this.#spGameOver.hidden = true;
       this.#spMedal.hidden = true;
       this.#spFinalScore.visible = false;
       this.#spHighScore.visible = false;
     }
 
-    EGameStatus.state = EGameStatus.countDown; //reset play button to original position
+    EGameStatus.state = EGameStatus.countDown;
     this.#spPlayBtn.x = 240;
     this.#spPlayBtn.y = 180;
     this.#spPlayBtn.hidden = true;
 
     this.#spTitle.hidden = true;
     this.#spReady.hidden = false;
-    this.#spCountDown.hidden = false;
+    this.#spCountDown.visible = true;
     this.#spCountDown.value = 3;
     this.#sfCountDown = new TSoundFile(fnCountDown);
     this.#sfCountDown.play();
@@ -162,32 +164,26 @@ export class TMenu {
     }
   }
   showGameOver() {
-    // Stop Audio
     this.stopSound();
 
     this.#spReady.hidden = true;
     this.hideScore();
 
-    // Show Billboard
     this.#spGameOver.hidden = false;
 
-    // reposition the playbttn
-    this.#spPlayBtn.x = 240; // Change these values to position where you want
-    this.#spPlayBtn.y = 45; // Adjust Y to be below the game over board
+    this.#spPlayBtn.x = 240;
+    this.#spPlayBtn.y = 45;
     this.#spPlayBtn.hidden = false;
 
-    // High Score
     const currentScore = this.getGameScore();
     const storedHighScore = Number(localStorage.getItem("highScore")) || 0;
     const newHighScore = Math.max(currentScore, storedHighScore);
 
-    // Update high score if current is higher
     if (currentScore > storedHighScore) {
       localStorage.setItem("highScore", currentScore);
       this.#highScores.push(currentScore);
     }
 
-    // Medal Logic
     let medalIndex;
     if (currentScore >= 30) {
       medalIndex = 1; // Gold medal
@@ -199,15 +195,12 @@ export class TMenu {
       medalIndex = 0; // No medal
     }
 
-    // Set the medal sprite index and show it
     this.#spMedal.index = medalIndex;
     this.#spMedal.hidden = false;
 
-    // Display scores
     this.#spFinalScore.visible = true;
     this.#spHighScore.visible = true;
 
-    // Animate the final score
     this.animateFinalScore(currentScore, newHighScore);
 
     console.log(`Game Over! Score: ${currentScore}, High Score: ${newHighScore}, Medal: ${medalIndex}`);
